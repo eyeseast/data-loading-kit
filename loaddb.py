@@ -61,7 +61,7 @@ def generate_rows(*files):
     Add state and year
     yield row
     """
-    for f in FILES:
+    for f in files:
 
         print('Loading {filename}: {sheet}'.format(**f))
 
