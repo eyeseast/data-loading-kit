@@ -12,28 +12,19 @@ FILES should be a list of dictionaries with at least the following keys:
 
 """
 # prune these imports if unnecessary
-import os
-import glob
 from collections import OrderedDict
 
 import dataset
-import xlrd
 from sqlalchemy import types
 
+from config import DATABASE_URL, TABLE_NAME, NULLS
 from utils import extract_matrix, grouper
-
-# add DATABASE_NAME and TABLE_NAME below
-DATA_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), 'data'))
-DATABASE_NAME = ""
-DATABASE_URL = "postgres://localhost/" + DATABASE_NAME
-
-TABLE_NAME = "ages"
-
-# add values that will become None
-NULLS = set()
 
 # the actual files to load
 FILES = []
+
+# force types using sqlalchemy.types
+TYPES = {}
 
 def main(reset=True):
     """
@@ -50,7 +41,7 @@ def main(reset=True):
 
     for group in grouper(rows, 1000, None):
         group = ifilter(bool, group)
-        table.insert_many(group)
+        table.insert_many(group, types=TYPES)
 
 
 def generate_rows(*files):
